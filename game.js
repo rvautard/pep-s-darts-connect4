@@ -14,9 +14,8 @@ const GAME_TRANSLATIONS = {
     menuButton: "Retour au menu",
     currentPlayerTurn: (name) => `Tour de ${name}`,
     casesLeft: (n) => `${n} case${n > 1 ? "s" : ""} à sélectionner`,
-    ownedCases: (n) => `${n} case${n > 1 ? "s" : ""}`,
+    ownedCases: (n) => `${n} case${n !== 1 ? "s" : ""}`,
     winnerMessage: (name) => `🎉 ${name} a gagné! 🎉`,
-    winnerMessageEn: (name) => `🎉 ${name} won! 🎉`,
   },
   en: {
     gameTitle: "Game in progress",
@@ -30,7 +29,6 @@ const GAME_TRANSLATIONS = {
     casesLeft: (n) => `${n} case${n > 1 ? "s" : ""} to select`,
     ownedCases: (n) => `${n} case${n > 1 ? "s" : ""}`,
     winnerMessage: (name) => `🎉 ${name} won! 🎉`,
-    winnerMessageEn: (name) => `🎉 ${name} won! 🎉`,
   },
 };
 
@@ -68,7 +66,7 @@ class GameState {
     this.gameOver = false;
     this.winner = null;
     this.currentPlayerTouches = 0;
-    this.lastTouchCell = null;
+    this.actionHistory = [];
   }
 
   initBoard() {
@@ -109,12 +107,21 @@ class GameState {
     const playerIndex = this.currentPlayerIndex;
     this.touches[cellIndex][playerIndex] += 1;
     this.currentPlayerTouches += 1;
-    this.lastTouchCell = cellIndex;
 
-    let shouldAutoNext = false;
-
+    let owned = false;
     if (this.touches[cellIndex][playerIndex] === MAX_TOUCHES) {
       this.ownership[cellIndex] = playerIndex;
+      owned = true;
+    }
+
+    this.actionHistory.push({
+      type: "touch",
+      playerIndex,
+      cellIndex,
+      owned,
+    });
+
+    if (owned) {
       const result = this.checkWin(playerIndex);
       if (result.won) {
         this.gameOver = true;
@@ -123,6 +130,7 @@ class GameState {
       }
     }
 
+    let shouldAutoNext = false;
     if (this.currentPlayerTouches === MAX_TOUCHES) {
       shouldAutoNext = true;
     }
@@ -130,22 +138,46 @@ class GameState {
     return { success: true, shouldAutoNext };
   }
 
-  undoLastTouch() {
-    if (this.lastTouchCell === null || this.gameOver) return false;
+  undoLastAction() {
+    if (this.actionHistory.length === 0 || this.gameOver) return false;
 
-    const playerIndex = this.currentPlayerIndex;
-    const cellIndex = this.lastTouchCell;
+    const lastAction = this.actionHistory[this.actionHistory.length - 1];
 
-    if (this.touches[cellIndex][playerIndex] === 0) return false;
+    if (lastAction.type === "next") {
+      this.actionHistory.pop();
+      this.currentPlayerIndex = lastAction.previousPlayerIndex;
+      this.currentPlayerTouches = lastAction.previousPlayerTouches;
+
+      if (this.actionHistory.length > 0) {
+        const touchAction = this.actionHistory[this.actionHistory.length - 1];
+        if (touchAction.type === "touch" && touchAction.playerIndex === this.currentPlayerIndex) {
+          return this.undoTouch(touchAction);
+        }
+      }
+      return true;
+    }
+
+    if (lastAction.type === "touch") {
+      if (lastAction.playerIndex !== this.currentPlayerIndex) {
+        return false;
+      }
+      return this.undoTouch(lastAction);
+    }
+
+    return false;
+  }
+
+  undoTouch(action) {
+    this.actionHistory.pop();
+    const { playerIndex, cellIndex, owned } = action;
 
     this.touches[cellIndex][playerIndex] -= 1;
     this.currentPlayerTouches -= 1;
 
-    if (this.ownership[cellIndex] === playerIndex) {
+    if (owned) {
       this.ownership[cellIndex] = null;
     }
 
-    this.lastTouchCell = null;
     return true;
   }
 
@@ -202,13 +234,36 @@ class GameState {
   }
 
   nextPlayer() {
+    this.actionHistory.push({
+      type: "next",
+      previousPlayerIndex: this.currentPlayerIndex,
+      previousPlayerTouches: this.currentPlayerTouches,
+    });
     this.currentPlayerIndex = (this.currentPlayerIndex + 1) % this.players.length;
     this.currentPlayerTouches = 0;
-    this.lastTouchCell = null;
   }
 }
 
 let gameState = null;
+let autoNextTimer = null;
+
+function clearAutoNext() {
+  if (autoNextTimer !== null) {
+    clearTimeout(autoNextTimer);
+    autoNextTimer = null;
+  }
+}
+
+function scheduleAutoNext() {
+  clearAutoNext();
+  autoNextTimer = setTimeout(() => {
+    autoNextTimer = null;
+    gameState.nextPlayer();
+    renderBoard();
+    updatePlayersStatus();
+    updateCurrentPlayerStatus();
+  }, 600);
+}
 
 function loadGameSetup() {
   const setup = localStorage.getItem("gameSetup");
@@ -225,6 +280,7 @@ function loadGameSetup() {
 
 function initGame() {
   const setup = loadGameSetup();
+  if (!setup) return;
   gameState = new GameState(setup.players);
   renderBoard();
   updatePlayersStatus();
@@ -285,12 +341,7 @@ function renderBoard() {
           if (result.gameWon) {
             showWinner();
           } else if (result.shouldAutoNext) {
-            setTimeout(() => {
-              gameState.nextPlayer();
-              renderBoard();
-              updatePlayersStatus();
-              updateCurrentPlayerStatus();
-            }, 600);
+            scheduleAutoNext();
           }
         }
       }
@@ -369,15 +420,18 @@ document.getElementById("back-btn").addEventListener("click", backToMenu);
 document.getElementById("play-again-btn").addEventListener("click", resetGame);
 document.getElementById("menu-btn").addEventListener("click", backToMenu);
 document.getElementById("next-player-btn").addEventListener("click", () => {
+  clearAutoNext();
   gameState.nextPlayer();
   renderBoard();
   updatePlayersStatus();
   updateCurrentPlayerStatus();
 });
 document.getElementById("undo-btn").addEventListener("click", () => {
-  const result = gameState.undoLastTouch();
+  clearAutoNext();
+  const result = gameState.undoLastAction();
   if (result) {
     renderBoard();
+    updatePlayersStatus();
     updateCurrentPlayerStatus();
   }
 });

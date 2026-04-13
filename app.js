@@ -52,9 +52,14 @@ function translatePage() {
   document.querySelector(".setup-head p").textContent = t("configSubtitle");
   document.querySelector(".field-label").textContent = t("playerCountLabel");
   document.getElementById("start-game-btn").textContent = t("startButton");
-  
-  const playerCountValue = Number(playerCountSelect.value);
-  createPlayerFields(playerCountValue);
+
+  const fields = playersContainer.querySelectorAll(".player-field");
+  fields.forEach((field, index) => {
+    const label = field.querySelector("label");
+    const input = field.querySelector("input");
+    label.textContent = t("playerLabel", index + 1);
+    input.placeholder = t("playerPlaceholder", index + 1);
+  });
 }
 
 const playerCountSelect = document.getElementById("player-count");
