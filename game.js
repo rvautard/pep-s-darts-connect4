@@ -103,6 +103,7 @@ class GameState {
   touchCell(cellIndex) {
     if (this.gameOver) return { success: false };
     if (this.ownership[cellIndex] !== null) return { success: false };
+    if (this.currentPlayerTouches >= MAX_TOUCHES) return { success: false };
 
     const playerIndex = this.currentPlayerIndex;
     this.touches[cellIndex][playerIndex] += 1;
