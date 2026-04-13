@@ -382,12 +382,5 @@ document.getElementById("undo-btn").addEventListener("click", () => {
   }
 });
 
-const languageSelect = document.getElementById("language-select");
-languageSelect.value = currentLanguage;
-languageSelect.addEventListener("change", (event) => {
-  setGameLanguage(event.target.value);
-  translateGameUI();
-});
-
 initGame();
 translateGameUI();
