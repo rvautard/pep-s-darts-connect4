@@ -247,6 +247,15 @@ class GameState {
 
 let gameState = null;
 let autoNextTimer = null;
+let inputLocked = false;
+
+function lockInput() {
+  inputLocked = true;
+}
+
+function unlockInput() {
+  inputLocked = false;
+}
 
 function clearAutoNext() {
   if (autoNextTimer !== null) {
@@ -257,12 +266,14 @@ function clearAutoNext() {
 
 function scheduleAutoNext() {
   clearAutoNext();
+  lockInput();
   autoNextTimer = setTimeout(() => {
     autoNextTimer = null;
     gameState.nextPlayer();
     renderBoard();
     updatePlayersStatus();
     updateCurrentPlayerStatus();
+    unlockInput();
   }, 600);
 }
 
@@ -332,6 +343,7 @@ function renderBoard() {
     }
 
     cell.addEventListener("click", () => {
+      if (inputLocked) return;
       if (!isOwned && !gameState.gameOver) {
         const result = gameState.touchCell(i);
         if (result.success) {
@@ -422,6 +434,7 @@ document.getElementById("play-again-btn").addEventListener("click", resetGame);
 document.getElementById("menu-btn").addEventListener("click", backToMenu);
 document.getElementById("next-player-btn").addEventListener("click", () => {
   clearAutoNext();
+  unlockInput();
   gameState.nextPlayer();
   renderBoard();
   updatePlayersStatus();
@@ -429,6 +442,7 @@ document.getElementById("next-player-btn").addEventListener("click", () => {
 });
 document.getElementById("undo-btn").addEventListener("click", () => {
   clearAutoNext();
+  unlockInput();
   const result = gameState.undoLastAction();
   if (result) {
     renderBoard();
