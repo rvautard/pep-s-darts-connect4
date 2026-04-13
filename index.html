@@ -1,0 +1,72 @@
+<!doctype html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Soiree Jeux - Preparation de la partie</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Bungee:wght@400&family=Outfit:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <div class="language-selector">
+    <select id="language-select" class="language-control" aria-label="Sélectionner la langue">
+      <option value="fr">Français</option>
+      <option value="en">English</option>
+    </select>
+  </div>
+
+  <main class="lobby-shell">
+    <section class="hero-card">
+      <img
+        src="landing-illustration.svg"
+        alt="Un personnage joue aux flechettes pendant qu'un autre observe un puissance 4"
+        class="hero-visual"
+      >
+
+      <div class="overlay-grid">
+        <div class="hero-text">
+          <p class="kicker">NOUVEAU MATCH</p>
+          <h1>Soiree Flechettes + Puissance 4</h1>
+          <p class="subtitle">
+            Lance la partie en quelques secondes. Choisis les joueurs, leurs noms,
+            puis appuie sur <strong>Demarrer la partie</strong>.
+          </p>
+        </div>
+
+        <section class="setup-card" aria-label="Configuration de la partie">
+          <div class="setup-head">
+            <h2>Configuration joueurs</h2>
+            <p>De 1 a 8 joueurs</p>
+          </div>
+
+          <div class="form-grid">
+            <label for="player-count" class="field-label">Nombre de joueurs</label>
+            <select id="player-count" class="input-control" aria-label="Nombre de joueurs">
+              <option value="1">1 joueur</option>
+              <option value="2" selected>2 joueurs</option>
+              <option value="3">3 joueurs</option>
+              <option value="4">4 joueurs</option>
+              <option value="5">5 joueurs</option>
+              <option value="6">6 joueurs</option>
+              <option value="7">7 joueurs</option>
+              <option value="8">8 joueurs</option>
+            </select>
+          </div>
+
+          <div id="players-container" class="players-container" aria-live="polite"></div>
+
+          <button id="start-game-btn" class="start-btn" type="button">
+            Demarrer la partie
+          </button>
+
+          <p id="status-message" class="status-message" aria-live="polite"></p>
+        </section>
+      </div>
+    </section>
+  </main>
+
+  <script src="app.js"></script>
+</body>
+</html>

@@ -1,0 +1,67 @@
+<!doctype html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Partie - Jeu</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Bungee:wght@400&family=Outfit:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="styles.css">
+  <link rel="stylesheet" href="game-styles.css">
+</head>
+<body class="game-screen">
+  <div class="language-selector">
+    <select id="language-select" class="language-control" aria-label="Sélectionner la langue">
+      <option value="fr">Français</option>
+      <option value="en">English</option>
+    </select>
+  </div>
+
+  <div class="game-container">
+    <div class="game-top-bar">
+      <h1 data-i18n="gameTitle">Partie en cours</h1>
+      <button id="back-btn" class="icon-btn" title="Retour au menu" aria-label="Retour au menu" data-i18n="backButton">
+        ← Menu
+      </button>
+    </div>
+
+    <div class="game-content">
+      <aside class="players-sidebar">
+        <div class="players-list">
+          <h2 data-i18n="playersTitle">Joueurs</h2>
+          <ul id="players-status" class="players-status" aria-live="polite"></ul>
+        </div>
+      </aside>
+
+      <main class="game-main">
+        <div class="board-wrapper">
+          <div id="game-board" class="game-board" role="application" aria-label="Plateau de jeu 4x4"></div>
+        </div>
+
+        <div class="current-player-status" aria-live="polite">
+          <div class="player-display">
+            <span id="current-player-name" class="player-name-display"></span>
+            <span id="touches-left" class="touches-left"></span>
+          </div>
+        </div>
+
+        <div class="game-controls">
+          <button id="undo-btn" class="undo-btn" title="Annuler la dernière touche" data-i18n="undoButton">↶ Annuler</button>
+          <button id="next-player-btn" class="next-btn" data-i18n="nextButton">Joueur suivant</button>
+        </div>
+
+        <div id="winner-overlay" class="winner-overlay hidden" role="alert">
+          <div class="winner-card">
+            <h2 id="winner-message"></h2>
+            <button id="play-again-btn" class="start-btn" data-i18n="playAgainButton">Rejouer</button>
+            <button id="menu-btn" class="start-btn secondary" data-i18n="menuButton">Retour au menu</button>
+          </div>
+        </div>
+      </main>
+    </div>
+  </div>
+
+  <script src="game.js"></script>
+</body>
+</html>

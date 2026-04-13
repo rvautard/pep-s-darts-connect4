@@ -1,0 +1,88 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 960 620" role="img" aria-labelledby="title desc">
+  <title id="title">Illustration joueurs flechettes et puissance 4</title>
+  <desc id="desc">Une scene coloree avec un personnage devant une cible de flechettes et un autre personnage observant un plateau de puissance 4.</desc>
+
+  <defs>
+    <linearGradient id="bg" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0%" stop-color="#ffeeb5"/>
+      <stop offset="100%" stop-color="#ffd2ac"/>
+    </linearGradient>
+    <linearGradient id="shirtOne" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="#18b7b5"/>
+      <stop offset="100%" stop-color="#0d918f"/>
+    </linearGradient>
+    <linearGradient id="shirtTwo" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="#ff7f4e"/>
+      <stop offset="100%" stop-color="#f45b2a"/>
+    </linearGradient>
+  </defs>
+
+  <rect width="960" height="620" rx="38" fill="url(#bg)"/>
+  <circle cx="124" cy="96" r="56" fill="#fff2d6" opacity="0.8"/>
+  <circle cx="842" cy="120" r="82" fill="#ffd8bc" opacity="0.8"/>
+
+  <rect x="62" y="132" width="232" height="350" rx="16" fill="#fff9ef" stroke="#f2d9b9" stroke-width="8"/>
+  <circle cx="178" cy="284" r="116" fill="#ffffff" stroke="#d7e2ee" stroke-width="8"/>
+  <circle cx="178" cy="284" r="92" fill="#ffd8c7"/>
+  <circle cx="178" cy="284" r="67" fill="#ffffff"/>
+  <circle cx="178" cy="284" r="42" fill="#ff7a4a"/>
+  <circle cx="178" cy="284" r="18" fill="#1fb8b8"/>
+  <line x1="178" y1="168" x2="178" y2="400" stroke="#d2552f" stroke-width="6"/>
+  <line x1="62" y1="284" x2="294" y2="284" stroke="#d2552f" stroke-width="6"/>
+
+  <g transform="translate(294 300)">
+    <ellipse cx="66" cy="228" rx="62" ry="20" fill="#f0c8a5" opacity="0.5"/>
+    <circle cx="68" cy="62" r="34" fill="#ffd7ba"/>
+    <rect x="26" y="98" width="84" height="116" rx="24" fill="url(#shirtOne)"/>
+    <rect x="14" y="114" width="24" height="70" rx="12" fill="#ffd7ba"/>
+    <rect x="100" y="104" width="24" height="86" rx="12" fill="#ffd7ba"/>
+    <path d="M120 112 L168 92 L176 104 L130 128 Z" fill="#ffd7ba"/>
+    <path d="M174 90 L202 84 L206 94 L178 104 Z" fill="#3f5470"/>
+    <rect x="40" y="206" width="20" height="58" rx="9" fill="#263a56"/>
+    <rect x="76" y="206" width="20" height="58" rx="9" fill="#263a56"/>
+  </g>
+
+  <g transform="translate(520 200)">
+    <ellipse cx="150" cy="308" rx="130" ry="20" fill="#e4b794" opacity="0.45"/>
+    <rect x="0" y="56" width="276" height="180" rx="18" fill="#0c4f7d"/>
+    <rect x="16" y="74" width="244" height="144" rx="12" fill="#1e7db5"/>
+
+    <g fill="#f2f8ff" opacity="0.95">
+      <circle cx="44" cy="106" r="18"/>
+      <circle cx="92" cy="106" r="18"/>
+      <circle cx="140" cy="106" r="18"/>
+      <circle cx="188" cy="106" r="18"/>
+      <circle cx="236" cy="106" r="18"/>
+      <circle cx="44" cy="146" r="18"/>
+      <circle cx="92" cy="146" r="18"/>
+      <circle cx="140" cy="146" r="18"/>
+      <circle cx="188" cy="146" r="18"/>
+      <circle cx="236" cy="146" r="18"/>
+      <circle cx="44" cy="186" r="18"/>
+      <circle cx="92" cy="186" r="18"/>
+      <circle cx="140" cy="186" r="18"/>
+      <circle cx="188" cy="186" r="18"/>
+      <circle cx="236" cy="186" r="18"/>
+    </g>
+
+    <circle cx="92" cy="146" r="15" fill="#ff8756"/>
+    <circle cx="140" cy="146" r="15" fill="#ffcc3a"/>
+    <circle cx="188" cy="146" r="15" fill="#ff8756"/>
+    <circle cx="92" cy="186" r="15" fill="#ffcc3a"/>
+    <circle cx="140" cy="186" r="15" fill="#ff8756"/>
+    <circle cx="188" cy="186" r="15" fill="#ffcc3a"/>
+
+    <g transform="translate(232 138)">
+      <circle cx="42" cy="40" r="30" fill="#ffd7ba"/>
+      <rect x="8" y="72" width="68" height="92" rx="20" fill="url(#shirtTwo)"/>
+      <rect x="-2" y="88" width="18" height="60" rx="9" fill="#ffd7ba"/>
+      <rect x="68" y="84" width="18" height="60" rx="9" fill="#ffd7ba"/>
+      <rect x="18" y="158" width="16" height="46" rx="8" fill="#263a56"/>
+      <rect x="50" y="158" width="16" height="46" rx="8" fill="#263a56"/>
+    </g>
+  </g>
+
+  <text x="70" y="544" font-family="Arial, sans-serif" font-size="34" fill="#2e425b" font-weight="700">
+    Pret pour une partie fun ?
+  </text>
+</svg>
