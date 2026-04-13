@@ -38,10 +38,18 @@ body {
   position: fixed;
   top: 14px;
   right: 16px;
-  z-index: 10;
+  z-index: 100;
   display: flex;
   align-items: center;
   gap: 8px;
+}
+
+@media (max-width: 768px) {
+  .language-selector {
+    top: auto;
+    bottom: 14px;
+    right: 16px;
+  }
 }
 
 .language-control {
