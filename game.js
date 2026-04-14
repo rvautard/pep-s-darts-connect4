@@ -10,6 +10,8 @@ const GAME_TRANSLATIONS = {
     playersTitle: "Joueurs",
     undoButton: "↶ Annuler",
     nextButton: "Joueur suivant",
+    doubleButton: "× 2 Double",
+    tripleButton: "× 3 Triple",
     playAgainButton: "Rejouer",
     menuButton: "Retour au menu",
     currentPlayerTurn: (name) => `Tour de ${name}`,
@@ -23,6 +25,8 @@ const GAME_TRANSLATIONS = {
     playersTitle: "Players",
     undoButton: "↶ Undo",
     nextButton: "Next Player",
+    doubleButton: "× 2 Double",
+    tripleButton: "× 3 Triple",
     playAgainButton: "Play Again",
     menuButton: "Back to Menu",
     currentPlayerTurn: (name) => `${name}'s turn`,
@@ -100,17 +104,22 @@ class GameState {
     return [Math.floor(index / COLS), index % COLS];
   }
 
-  touchCell(cellIndex) {
+  touchCell(cellIndex, multiplier) {
     if (this.gameOver) return { success: false };
     if (this.ownership[cellIndex] !== null) return { success: false };
     if (this.currentPlayerTouches >= MAX_TOUCHES) return { success: false };
 
     const playerIndex = this.currentPlayerIndex;
-    this.touches[cellIndex][playerIndex] += 1;
+    const currentTouches = this.touches[cellIndex][playerIndex];
+    const effectiveAdd = Math.min(multiplier, MAX_TOUCHES - currentTouches);
+
+    if (effectiveAdd <= 0) return { success: false };
+
+    this.touches[cellIndex][playerIndex] += effectiveAdd;
     this.currentPlayerTouches += 1;
 
     let owned = false;
-    if (this.touches[cellIndex][playerIndex] === MAX_TOUCHES) {
+    if (this.touches[cellIndex][playerIndex] >= MAX_TOUCHES) {
       this.ownership[cellIndex] = playerIndex;
       owned = true;
     }
@@ -120,6 +129,7 @@ class GameState {
       playerIndex,
       cellIndex,
       owned,
+      touchesAdded: effectiveAdd,
     });
 
     if (owned) {
@@ -170,9 +180,9 @@ class GameState {
 
   undoTouch(action) {
     this.actionHistory.pop();
-    const { playerIndex, cellIndex, owned } = action;
+    const { playerIndex, cellIndex, owned, touchesAdded } = action;
 
-    this.touches[cellIndex][playerIndex] -= 1;
+    this.touches[cellIndex][playerIndex] -= touchesAdded;
     this.currentPlayerTouches -= 1;
 
     if (owned) {
@@ -248,6 +258,7 @@ class GameState {
 let gameState = null;
 let autoNextTimer = null;
 let inputLocked = false;
+let currentMultiplier = 1;
 
 function lockInput() {
   inputLocked = true;
@@ -345,7 +356,9 @@ function renderBoard() {
     cell.addEventListener("click", () => {
       if (inputLocked) return;
       if (!isOwned && !gameState.gameOver) {
-        const result = gameState.touchCell(i);
+        const result = gameState.touchCell(i, currentMultiplier);
+        currentMultiplier = 1;
+        updateModifierButtons();
         if (result.success) {
           renderBoard();
           updatePlayersStatus();
@@ -419,10 +432,12 @@ function showWinner() {
 function resetGame() {
   const setup = loadGameSetup();
   gameState = new GameState(setup.players);
+  currentMultiplier = 1;
   document.getElementById("winner-overlay").classList.add("hidden");
   renderBoard();
   updatePlayersStatus();
   updateCurrentPlayerStatus();
+  updateModifierButtons();
 }
 
 function backToMenu() {
@@ -435,6 +450,8 @@ document.getElementById("menu-btn").addEventListener("click", backToMenu);
 document.getElementById("next-player-btn").addEventListener("click", () => {
   clearAutoNext();
   unlockInput();
+  currentMultiplier = 1;
+  updateModifierButtons();
   gameState.nextPlayer();
   renderBoard();
   updatePlayersStatus();
@@ -443,6 +460,8 @@ document.getElementById("next-player-btn").addEventListener("click", () => {
 document.getElementById("undo-btn").addEventListener("click", () => {
   clearAutoNext();
   unlockInput();
+  currentMultiplier = 1;
+  updateModifierButtons();
   const result = gameState.undoLastAction();
   if (result) {
     renderBoard();
@@ -451,5 +470,23 @@ document.getElementById("undo-btn").addEventListener("click", () => {
   }
 });
 
+function updateModifierButtons() {
+  const doubleBtn = document.getElementById("mod-double");
+  const tripleBtn = document.getElementById("mod-triple");
+  doubleBtn.classList.toggle("active", currentMultiplier === 2);
+  tripleBtn.classList.toggle("active", currentMultiplier === 3);
+}
+
+document.getElementById("mod-double").addEventListener("click", () => {
+  currentMultiplier = currentMultiplier === 2 ? 1 : 2;
+  updateModifierButtons();
+});
+
+document.getElementById("mod-triple").addEventListener("click", () => {
+  currentMultiplier = currentMultiplier === 3 ? 1 : 3;
+  updateModifierButtons();
+});
+
 initGame();
 translateGameUI();
+updateModifierButtons();

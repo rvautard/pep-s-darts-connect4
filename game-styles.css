@@ -228,6 +228,39 @@
   gap: 12px;
 }
 
+.modifier-controls {
+  margin-top: 16px;
+  display: flex;
+  justify-content: center;
+  gap: 12px;
+}
+
+.mod-btn {
+  border: 2px solid rgba(255, 255, 255, 0.3);
+  border-radius: 12px;
+  padding: 10px 20px;
+  font-family: "Bungee", sans-serif;
+  letter-spacing: 0.03em;
+  color: rgba(255, 255, 255, 0.7);
+  background: rgba(255, 255, 255, 0.08);
+  cursor: pointer;
+  transition: all 0.2s ease;
+  font-size: 0.95rem;
+}
+
+.mod-btn:hover {
+  background: rgba(255, 255, 255, 0.14);
+  border-color: rgba(255, 255, 255, 0.45);
+  color: #ffffff;
+}
+
+.mod-btn.active {
+  background: linear-gradient(135deg, #e8a420, #d4911a);
+  border-color: #e8a420;
+  color: #ffffff;
+  box-shadow: 0 0 18px rgba(232, 164, 32, 0.4);
+}
+
 .undo-btn {
   border: 0;
   border-radius: 999px;
